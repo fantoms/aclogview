@@ -77,24 +77,65 @@ namespace aclogview {
             Settings.Default.Save();
         }
 
+        static List<BlobFrag> partialFrags = new List<BlobFrag>();
 
-        private void readPacket(PacketRecord packet, StringBuilder packetTypeStr, BinaryReader packetReader) {
+        //private void readPacket(PacketRecord packet, StringBuilder packetTypeStr, BinaryReader packetReader) {
+        //    BlobFrag newFrag = new BlobFrag();
+        //    newFrag.memberHeader_ = BlobFragHeader_t.read(packetReader);
+        //    newFrag.dat_ = packetReader.ReadBytes(newFrag.memberHeader_.blobFragSize - 16); // 16 == size of frag header
+
+        //    packet.netPacket.fragList_.Add(newFrag);
+
+        //    BinaryReader fragDataReader = new BinaryReader(new MemoryStream(newFrag.dat_));
+
+        //    if (newFrag.memberHeader_.blobNum != 0) {
+        //        packetTypeStr.Append("FragData[");
+        //        packetTypeStr.Append(newFrag.memberHeader_.blobNum);
+        //        packetTypeStr.Append("]");
+        //    } else {
+        //        PacketOpcode opcode = Util.readOpcode(fragDataReader);
+        //        packet.opcodes.Add(opcode);
+        //        packetTypeStr.Append(opcode.ToString());
+        //    }
+        //}
+
+        private static void readPacket(PacketRecord packet, StringBuilder packetTypeStr, BinaryReader packetReader)
+        {
             BlobFrag newFrag = new BlobFrag();
             newFrag.memberHeader_ = BlobFragHeader_t.read(packetReader);
-            newFrag.dat_ = packetReader.ReadBytes(newFrag.memberHeader_.blobFragSize - 16); // 16 == size of frag header
-
-            packet.netPacket.fragList_.Add(newFrag);
-
-            BinaryReader fragDataReader = new BinaryReader(new MemoryStream(newFrag.dat_));
-
-            if (newFrag.memberHeader_.blobNum != 0) {
+            newFrag.dat_ = packetReader.ReadBytes(newFrag.memberHeader_.blobFragSize - 16); ;
+            if (newFrag.memberHeader_.blobNum == 0)
+            {
+                
+                BinaryReader fragDataReader = new BinaryReader(new MemoryStream(newFrag.dat_));
+                PacketOpcode opcode = Util.readOpcode(fragDataReader);
+                packet.opcodes.Add(opcode);
+                packetTypeStr.Append(opcode);
+                packet.netPacket.fragList_.Add(newFrag);
+                if (newFrag.memberHeader_.numFrags > 1)
+                    partialFrags.Add(newFrag);
+            }
+            else
+            {
                 packetTypeStr.Append("FragData[");
                 packetTypeStr.Append(newFrag.memberHeader_.blobNum);
                 packetTypeStr.Append("]");
-            } else {
-                PacketOpcode opcode = Util.readOpcode(fragDataReader);
-                packet.opcodes.Add(opcode);
-                packetTypeStr.Append(opcode.ToString());
+                partialFrags.Add(newFrag);
+                var seqFrags = partialFrags.FindAll(x => x.memberHeader_.blobID == newFrag.memberHeader_.blobID);
+                
+                if (seqFrags.Count == newFrag.memberHeader_.numFrags)
+                {
+                    seqFrags.Sort(delegate (BlobFrag x, BlobFrag y) { return (int)x.memberHeader_.blobNum - (int)y.memberHeader_.blobNum; });
+                    MemoryStream stream = new MemoryStream();
+                    BinaryWriter writer = new BinaryWriter(stream);
+                    var firstFrag = seqFrags[0];
+                    foreach(BlobFrag frag in seqFrags)
+                    {
+                        writer.Write(frag.dat_);
+                    }
+                    firstFrag.dat_ = stream.ToArray();
+                    partialFrags.RemoveAll(x => x.memberHeader_.blobID == newFrag.memberHeader_.blobID);
+                }
             }
         }
 

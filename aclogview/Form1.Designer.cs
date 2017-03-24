@@ -46,7 +46,9 @@
             this.menuItem_ToolCount = new System.Windows.Forms.MenuItem();
             this.menuItem_ToolBad = new System.Windows.Forms.MenuItem();
             this.menuItem_ToolHeatmap = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.mnuItem_ToolFindOpcodeInFiles = new System.Windows.Forms.MenuItem();
+            this.mnuItem_ToolFragDatListTool = new System.Windows.Forms.MenuItem();
             this.menuItem_Help = new System.Windows.Forms.MenuItem();
             this.menuItem_About = new System.Windows.Forms.MenuItem();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
@@ -55,8 +57,6 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.checkBox_HideHeaderOnly = new System.Windows.Forms.CheckBox();
             this.checkBox_useHighlighting = new System.Windows.Forms.CheckBox();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
-            this.mnuItem_ToolFragDatListTool = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer_Main)).BeginInit();
             this.splitContainer_Main.Panel1.SuspendLayout();
             this.splitContainer_Main.Panel2.SuspendLayout();
@@ -259,11 +259,22 @@
             this.menuItem_ToolHeatmap.Text = "Heatmap";
             this.menuItem_ToolHeatmap.Click += new System.EventHandler(this.menuItem_ToolHeatmap_Click);
             // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 3;
+            this.menuItem2.Text = "-";
+            // 
             // mnuItem_ToolFindOpcodeInFiles
             // 
             this.mnuItem_ToolFindOpcodeInFiles.Index = 4;
             this.mnuItem_ToolFindOpcodeInFiles.Text = "Find Opcode In Files";
             this.mnuItem_ToolFindOpcodeInFiles.Click += new System.EventHandler(this.mnuItem_ToolFindOpcodeInFiles_Click);
+            // 
+            // mnuItem_ToolFragDatListTool
+            // 
+            this.mnuItem_ToolFragDatListTool.Index = 5;
+            this.mnuItem_ToolFragDatListTool.Text = "Frag Dat List Tool";
+            this.mnuItem_ToolFragDatListTool.Click += new System.EventHandler(this.mnuItem_ToolFragDatListTool_Click);
             // 
             // menuItem_Help
             // 
@@ -333,17 +344,6 @@
             this.checkBox_useHighlighting.Text = "Use Highlighting (Slower!)";
             this.checkBox_useHighlighting.UseVisualStyleBackColor = true;
             this.checkBox_useHighlighting.CheckedChanged += new System.EventHandler(this.checkBox_useHighlighting_CheckedChanged);
-            // 
-            // menuItem2
-            // 
-            this.menuItem2.Index = 3;
-            this.menuItem2.Text = "-";
-            // 
-            // mnuItem_ToolFragDatListTool
-            // 
-            this.mnuItem_ToolFragDatListTool.Index = 5;
-            this.mnuItem_ToolFragDatListTool.Text = "Frag Dat List Tool";
-            this.mnuItem_ToolFragDatListTool.Click += new System.EventHandler(this.mnuItem_ToolFragDatListTool_Click);
             // 
             // Form1
             // 
